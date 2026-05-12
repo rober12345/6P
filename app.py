@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 # =========================================================
-# CONFIGURATION
+# PAGE CONFIGURATION
 # =========================================================
 
 st.set_page_config(
@@ -13,7 +13,36 @@ st.set_page_config(
     layout="wide"
 )
 
+# =========================================================
+# LOGO + HEADER
+# =========================================================
+
+col_logo, col_title = st.columns([1, 5])
+
+with col_logo:
+
+    if os.path.exists("assets/logo.png"):
+        st.image("assets/logo.png", width=140)
+
+with col_title:
+
+    st.title("6P")
+    st.subheader("Process Pain Point Platform")
+
+    st.markdown("""
+    Capture operational pain points, process variation,
+    waste, and execution gaps across manufacturing operations.
+    """)
+
+# =========================================================
+# DATA FILE
+# =========================================================
+
 DATA_FILE = "data/observations.csv"
+
+# =========================================================
+# PAIN POINT OPTIONS
+# =========================================================
 
 PAIN_POINTS = [
     "a_scrap",
@@ -24,6 +53,10 @@ PAIN_POINTS = [
     "f_safety",
     "g_other"
 ]
+
+# =========================================================
+# TABLE COLUMNS
+# =========================================================
 
 COLUMNS = [
     "Date",
@@ -67,18 +100,6 @@ if "Date" in master_df.columns:
         master_df["Date"],
         errors="coerce"
     )
-
-# =========================================================
-# TITLE
-# =========================================================
-
-st.title("6P")
-st.subheader("Process Pain Point Platform")
-
-st.markdown("""
-Capture operational pain points, process variation,
-waste, and execution gaps across manufacturing operations.
-""")
 
 # =========================================================
 # INITIALIZE SESSION DATA
@@ -157,7 +178,10 @@ edited_df = st.data_editor(
     }
 )
 
-# SAVE SESSION
+# =========================================================
+# SAVE SESSION DATA
+# =========================================================
+
 st.session_state.session_df = edited_df
 
 # =========================================================
@@ -254,7 +278,6 @@ if generate_charts:
 
         analysis_df = pd.read_csv(DATA_FILE)
 
-        # Convert dates safely
         analysis_df["Date"] = pd.to_datetime(
             analysis_df["Date"],
             errors="coerce"
